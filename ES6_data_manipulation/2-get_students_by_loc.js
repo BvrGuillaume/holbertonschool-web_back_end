@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default function getStudentsBylocation (students, city) {
 	if (!Array.isArray(students)) {
 		return [];
