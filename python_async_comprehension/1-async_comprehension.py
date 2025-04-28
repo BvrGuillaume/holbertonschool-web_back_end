@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Coroutine called async_comprehension that takes no arguments."""
 
 import asyncio
 import random
