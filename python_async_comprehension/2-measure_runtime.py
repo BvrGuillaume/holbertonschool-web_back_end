@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
-"""Measure_runtime coroutine that will execute."""
-
 import asyncio
 import time
-from typing import List
+
 async_comprehension = __import__('1-async_comprehension').async_comprehension
 
+# La fonction measure_runtime mesure le temps total d'exécution
 async def measure_runtime() -> float:
-    start_time = time.perf_counter()
-    await asyncio.gather(
-        async_comprehension(),
-        async_comprehension(),
-        async_comprehension(),
-        async_comprehension()
-    )
-    end_time = time.perf_counter()
-    return end_time - start_time
-'''Mesure le temps d'exécution total de 4 exécutions de async_comprehension en parallèle et retourne le temps d'éxécution '''
+    """heure de début"""
+    start = time.time()
+
+    """Exécution parallèle des 4 appels à async_comprehension"""
+    """asyncio.gather permet d'exécuter les tâches simultanément"""
+    await asyncio.gather(*(async_comprehension() for _ in range(4)))
+
+    """enregistre l'heure de fin après que toutes les tâches soient terminé"""
+    end = time.time()
+
+    """renvoie la différence entre l'heure de fin et l'heure de début"""
+    return end - start
