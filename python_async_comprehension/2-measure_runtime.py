@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Measure_runtime coroutine that will execute."""
 import asyncio
 import time
 
