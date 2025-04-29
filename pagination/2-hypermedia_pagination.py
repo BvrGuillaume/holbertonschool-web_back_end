@@ -3,7 +3,7 @@
 import csv
 import math
 from typing import List
-
+""" this module contains a function to filter data from csv file """
 
 def index_range(page, page_size):
     """
