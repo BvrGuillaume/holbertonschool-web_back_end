@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""
-Deletion-resilient hypermedia pagination
-"""
-
+""" this module contains a function to filter data from csv file """
 import csv
 import math
 from typing import List
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
@@ -15,7 +13,6 @@ class Server:
 
     def __init__(self):
         self.__dataset = None
-        self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
         """Cached dataset
@@ -28,38 +25,29 @@ class Server:
 
         return self.__dataset
 
-    def indexed_dataset(self) -> Dict[int, List]:
-        """Dataset indexed by sorting position, starting at 0
-        """
-        if self.__indexed_dataset is None:
-            dataset = self.dataset()
-            truncated_dataset = dataset[:1000]
-            self.__indexed_dataset = {
-                i: dataset[i] for i in range(len(dataset))
-            }
-        return self.__indexed_dataset
+    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        """ filter data from csv """
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
+        i, d = index_range(page, page_size)
+        data = self.dataset()
+        if i > len(data):
+            return []
+        return data[i: d]
 
-    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-        """
-        method return a dictionary with the following key-value pairs
-        """
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
+        """ filter data from csv """
 
-        start_index = index if index is not None else 0
-        end_index = start_index + page_size - 1
-        size_data = len(self.dataset())
-
-        assert start_index >= 0
-        assert end_index < size_data
-
-        current_page = [self.dataset()[i] for i in range(start_index,
-                                                         min(end_index + 1,
-                                                             size_data))]
-
-        next_index = end_index + 1
-
+        data_page = self.get_page(page, page_size)
+        total_data = len(self.dataset())
+        total_pages = math.ceil(total_data / page_size)
+        next_page = page + 1 if page < total_pages else None
+        prev_page = page - 1 if page > 1 else None
         return {
-            'index': start_index,
-            'data': current_page,
-            'page_size': page_size,
-            'next_index': next_index
+            'page_size': len(data_page),
+            'page': page,
+            'data': data_page,
+            'next_page': next_page,
+            'prev_page': prev_page,
+            'total_pages': total_pages
         }
