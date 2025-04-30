@@ -1,0 +1,2 @@
+// Creates or uses the database in MongoDB
+use my-db
